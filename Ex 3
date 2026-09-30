@@ -1,0 +1,103 @@
+abstract class BankAccount {
+    int accNo;
+    String name;
+    double balance;
+
+    BankAccount(int accNo, String name, double balance) {
+        this.accNo = accNo;
+        this.name = name;
+        this.balance = balance;
+    }
+
+    void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposited: Rs." + amount);
+    }
+
+    void displayBalance() {
+        System.out.println("Balance: Rs." + balance);
+    }
+
+    abstract void calculateInterest();
+    abstract void withdraw(double amount);
+}
+
+interface LoanService {
+    void processLoan(double amount);
+}
+
+class SavingsAccount extends BankAccount implements LoanService {
+
+    SavingsAccount(int no, String name, double balance) {
+        super(no, name, balance);
+    }
+
+    void calculateInterest() {
+        double interest = balance * 0.05;
+        System.out.println("Savings Interest: Rs." + interest);
+    }
+
+    void withdraw(double amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            System.out.println("Withdrawn: Rs." + amount);
+        } else {
+            System.out.println("Insufficient Balance");
+        }
+    }
+
+    public void processLoan(double amount) {
+        System.out.println("Savings Loan Processed: Rs." + amount);
+    }
+}
+
+class CurrentAccount extends BankAccount implements LoanService {
+    double overdraft = 5000;
+
+    CurrentAccount(int no, String name, double balance) {
+        super(no, name, balance);
+    }
+
+    void calculateInterest() {
+        double interest = balance * 0.03;
+        System.out.println("Current Interest: Rs." + interest);
+    }
+
+    void withdraw(double amount) {
+        if (amount <= balance + overdraft) {
+            balance -= amount;
+            System.out.println("Withdrawn: Rs." + amount);
+        } else {
+            System.out.println("Overdraft Limit Exceeded");
+        }
+    }
+
+    public void processLoan(double amount) {
+        System.out.println("Current Loan Processed: Rs." + amount);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        SavingsAccount s =
+            new SavingsAccount(101, "Keerthana", 10000);
+
+        CurrentAccount c =
+            new CurrentAccount(102, "Keerthana", 8000);
+
+        System.out.println("--- SAVINGS ACCOUNT ---");
+        s.deposit(2000);
+        s.withdraw(3000);
+        s.calculateInterest();
+        s.processLoan(5000);
+        s.displayBalance();
+
+        System.out.println("\n--- CURRENT ACCOUNT ---");
+        c.deposit(1000);
+        c.withdraw(7000);
+        c.calculateInterest();
+        c.processLoan(10000);
+        c.displayBalance();
+    }
+}
