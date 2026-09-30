@@ -1,0 +1,57 @@
+import java.util.*;
+import java.util.stream.*;
+
+class Employee {
+    int id;
+    String name;
+    double salary;
+
+    Employee(int id, String name, double salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    public String toString() {
+        return id + " " + name + " Rs." + salary;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        ArrayList<Employee> emp = new ArrayList<>();
+
+        emp.add(new Employee(101, "Arun", 30000));
+        emp.add(new Employee(102, "Bala", 45000));
+        emp.add(new Employee(103, "Cathy", 60000));
+        emp.add(new Employee(104, "Divya", 50000));
+
+        double threshold = 40000;
+
+        List<Employee> filtered = emp.stream()
+                .filter(e -> e.salary > threshold)
+                .collect(Collectors.toList());
+
+        System.out.println("--- SALARY ABOVE " + threshold + " ---");
+        filtered.forEach(System.out::println);
+
+        System.out.println("\n--- ASCENDING ORDER ---");
+        filtered.stream()
+                .sorted(Comparator.comparingDouble(e -> e.salary))
+                .forEach(System.out::println);
+
+        System.out.println("\n--- DESCENDING ORDER ---");
+        filtered.stream()
+                .sorted(Comparator.comparingDouble((Employee e) -> e.salary)
+                .reversed())
+                .forEach(System.out::println);
+
+        double average = filtered.stream()
+                .mapToDouble(e -> e.salary)
+                .average()
+                .orElse(0);
+
+        System.out.println("\nAverage Salary: Rs." + average);
+    }
+}
