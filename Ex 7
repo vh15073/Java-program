@@ -1,0 +1,132 @@
+import java.util.*;
+
+class TicketBooking {
+    int tickets;
+
+    TicketBooking(int tickets) {
+        this.tickets = tickets;
+    }
+
+    synchronized void bookTicket(String user, int count) {
+        System.out.println(user + " is trying to book " + count + " ticket(s).");
+
+        if (tickets >= count) {
+            tickets -= count;
+            System.out.println(user + " booked " + count + " ticket(s).");
+            System.out.println("Tickets remaining: " + tickets);
+        } else {
+            System.out.println("Sorry " + user + ", tickets are not available.");
+        }
+    }
+
+    void displayTickets() {
+        System.out.println("Available tickets: " + tickets);
+    }
+}
+
+class BookingThread extends Thread {
+    TicketBooking booking;
+    String user;
+    int count;
+
+    BookingThread(TicketBooking booking, String user, int count) {
+        this.booking = booking;
+        this.user = user;
+        this.count = count;
+    }
+
+    public void run() {
+        booking.bookTicket(user, count);
+    }
+}
+
+class BookingRunnable implements Runnable {
+    TicketBooking booking;
+    String user;
+    int count;
+
+    BookingRunnable(TicketBooking booking, String user, int count) {
+        this.booking = booking;
+        this.user = user;
+        this.count = count;
+    }
+
+    public void run() {
+        booking.bookTicket(user, count);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        TicketBooking booking = new TicketBooking(10);
+
+        int choice;
+
+        do {
+            System.out.println("\n--- TICKET BOOKING SYSTEM ---");
+            System.out.println("1. Create Thread User");
+            System.out.println("2. Create Runnable User");
+            System.out.println("3. Book Tickets");
+            System.out.println("4. Display Tickets");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            if (choice == 1) {
+                BookingThread t = new BookingThread(
+                    booking, "User 1", 3);
+                t.start();
+
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+
+            } else if (choice == 2) {
+                BookingRunnable r = new BookingRunnable(
+                    booking, "User 2", 2);
+                Thread t = new Thread(r);
+                t.start();
+
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+
+            } else if (choice == 3) {
+                System.out.print("Enter number of tickets: ");
+                int n = sc.nextInt();
+
+                Thread t1 = new Thread(
+                    () -> booking.bookTicket("User A", n));
+                Thread t2 = new Thread(
+                    () -> booking.bookTicket("User B", n));
+
+                t1.start();
+                t2.start();
+
+                try {
+                    t1.join();
+                    t2.join();
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+
+            } else if (choice == 4) {
+                booking.displayTickets();
+
+            } else if (choice == 5) {
+                System.out.println("Thank you!");
+
+            } else {
+                System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
