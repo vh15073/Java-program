@@ -1,0 +1,66 @@
+import java.util.*;
+
+class Book {
+    int id;
+    String title, author;
+    double price;
+
+    Book(int id, String title, String author, double price) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.price = price;
+    }
+
+    public String toString() {
+        return id + "  " + title + "  " + author + "  Rs." + price;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        ArrayList<Book> books = new ArrayList<>();
+        HashMap<Integer, Book> map = new HashMap<>();
+
+        Book b1 = new Book(101, "Java", "James", 450);
+        Book b2 = new Book(102, "Python", "Guido", 500);
+        Book b3 = new Book(103, "C++", "Bjarne", 400);
+
+        books.add(b1);
+        books.add(b2);
+        books.add(b3);
+
+        map.put(b1.id, b1);
+        map.put(b2.id, b2);
+        map.put(b3.id, b3);
+
+        System.out.println("--- BOOK RECORDS ---");
+        for (Book b : books)
+            System.out.println(b);
+
+        System.out.println("\n--- SEARCH ---");
+        Book search = map.get(102);
+        System.out.println(search);
+
+        System.out.println("\n--- UPDATE ---");
+        b2.title = "Advanced Python";
+        b2.price = 600;
+        System.out.println(b2);
+
+        System.out.println("\n--- DELETE ---");
+        Iterator<Book> it = books.iterator();
+
+        while (it.hasNext()) {
+            Book b = it.next();
+            if (b.id == 103) {
+                it.remove();
+                map.remove(b.id);
+            }
+        }
+
+        System.out.println("\n--- UPDATED RECORDS ---");
+        for (Book b : books)
+            System.out.println(b);
+    }
+}
