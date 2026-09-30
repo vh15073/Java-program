@@ -1,0 +1,120 @@
+import java.io.*;
+import java.util.*;
+
+class Student {
+    String id, name, dept;
+    double marks;
+
+    Student(String id, String name, String dept, double marks) {
+        this.id = id;
+        this.name = name;
+        this.dept = dept;
+        this.marks = marks;
+    }
+
+    public String toString() {
+        return id + "," + name + "," + dept + "," + marks;
+    }
+}
+
+public class Main {
+    static Scanner sc = new Scanner(System.in);
+    static String file = "StudentRecords.txt";
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            System.out.println("\n--- STUDENT RECORD SYSTEM ---");
+            System.out.println("1. Add Student Record");
+            System.out.println("2. Read Records");
+            System.out.println("3. Display Records");
+            System.out.println("4. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    addStudent();
+                    break;
+                case 2:
+                    readRecords();
+                    break;
+                case 3:
+                    displayRecords();
+                    break;
+                case 4:
+                    System.out.println("Program terminated.");
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        } while (choice != 4);
+    }
+
+    static void addStudent() {
+        System.out.print("Enter Student ID: ");
+        String id = sc.nextLine();
+
+        System.out.print("Enter Student Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Department: ");
+        String dept = sc.nextLine();
+
+        System.out.print("Enter Marks: ");
+        double marks = sc.nextDouble();
+
+        Student s = new Student(id, name, dept, marks);
+
+        try {
+            FileWriter fw = new FileWriter(file, true);
+            fw.write(s + "\n");
+            fw.close();
+            System.out.println("Record stored successfully.");
+        } catch (IOException e) {
+            System.out.println("File Error: " + e.getMessage());
+        }
+    }
+
+    static void readRecords() {
+        try {
+            FileReader fr = new FileReader(file);
+            int ch;
+
+            System.out.println("\n--- FILE CONTENT ---");
+            while ((ch = fr.read()) != -1)
+                System.out.print((char) ch);
+
+            fr.close();
+        } catch (IOException e) {
+            System.out.println("File Error: " + e.getMessage());
+        }
+    }
+
+    static void displayRecords() {
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+
+            System.out.println("\n--- STUDENT RECORDS ---");
+
+            while ((line = br.readLine()) != null) {
+                String[] d = line.split(",");
+
+                System.out.println("Student ID : " + d[0]);
+                System.out.println("Name       : " + d[1]);
+                System.out.println("Department : " + d[2]);
+                System.out.println("Marks      : " + d[3]);
+                System.out.println("----------------------");
+            }
+
+            br.close();
+            fr.close();
+        } catch (IOException e) {
+            System.out.println("File Error: " + e.getMessage());
+        }
+    }
+}
