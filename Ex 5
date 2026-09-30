@@ -1,0 +1,46 @@
+import java.util.*;
+
+class InvalidMarksException extends Exception {
+    InvalidMarksException(String msg) {
+        super(msg);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter Student Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Enter Student ID: ");
+            int id = sc.nextInt();
+
+            System.out.print("Enter Marks: ");
+            int marks = sc.nextInt();
+
+            if (marks < 0 || marks > 100)
+                throw new InvalidMarksException(
+                    "Marks should be between 0 and 100");
+
+            System.out.println("\n--- STUDENT DETAILS ---");
+            System.out.println("Student ID   : " + id);
+            System.out.println("Student Name : " + name);
+            System.out.println("Marks        : " + marks);
+            System.out.println("Status       : Valid Marks");
+
+        } catch (InvalidMarksException e) {
+            System.out.println("InvalidMarksException: " + e.getMessage());
+
+        } catch (InputMismatchException e) {
+            System.out.println(
+                "InputMismatchException: Please enter valid numbers.");
+
+        } finally {
+            System.out.println("Validation completed.");
+        }
+
+        sc.close();
+    }
+}
